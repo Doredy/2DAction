@@ -28,7 +28,6 @@ public class PlayerController : MonoBehaviour
     {
         isGrounded = Physics2D.Linecast(transform.position + transform.up * 0.4f, transform.position - transform.up * 0.9f, groundLayer);
         Debug.DrawLine(transform.position + transform.up * 0.4f, transform.position - transform.up * 0.9f, Color.red, 1.0f);
-
         if (Input.GetButtonDown(jump))
         {
             Jump();
@@ -44,6 +43,7 @@ public class PlayerController : MonoBehaviour
         rb.AddForce(transform.up * jumpPower);
         anim.SetTrigger("Jump");
     }
+
     // Update is called once per frame
     void FixedUpdate()
     {
