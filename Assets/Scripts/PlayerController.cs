@@ -9,10 +9,17 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private float scale;
     private Animator anim;
+    private float limitPosX = 8.5f;
+    private float limitPosY = 4.45f;
     public float moveSpeed;
     public float jumpPower;
-
+    public GameObject[] ballons;
     public bool isGrounded;
+    public int maxBallonCount;
+    public Transform[] ballonTrans;
+    public GameObject ballonPrefab;
+    public float generateTime;
+    public bool isGenerating;
     [SerializeField]
     private LayerMask groundLayer;
 
@@ -20,21 +27,39 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        scale = transform.localScale.x;
         anim = GetComponent<Animator>();
+        ballons = new GameObject[maxBallonCount];
     }
 
     private void Update()
     {
         isGrounded = Physics2D.Linecast(transform.position + transform.up * 0.4f, transform.position - transform.up * 0.9f, groundLayer);
         Debug.DrawLine(transform.position + transform.up * 0.4f, transform.position - transform.up * 0.9f, Color.red, 1.0f);
-        if (Input.GetButtonDown(jump))
+        if (ballons[0] != null)
         {
-            Jump();
+            if (Input.GetButtonDown(jump))
+            {
+                Jump();
+            }
+            if (isGrounded == false && rb.velocity.y < 0.15f)
+            {
+                anim.SetTrigger("Fall");
+            }
         }
-        if (isGrounded == false && rb.velocity.y < 0.15f)
+        else
         {
-            anim.SetTrigger("Fall");
+            Debug.Log("バルーンなし、ジャンプ不可");
+        }
+        if (rb.velocity.y > 5.0f)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, 5.0f);
+        }
+        if (isGrounded == true && isGenerating == false)
+        {
+            if (Input.GetKeyDown(KeyCode.Q)) 
+            {
+                StartCoroutine(GenerateBallon());
+            }
         }
     }
 
@@ -57,7 +82,6 @@ public class PlayerController : MonoBehaviour
         if (x != 0)
         {
             rb.velocity = new Vector2(x * moveSpeed, rb.velocity.y);
-            //　？
             Vector3 temp = transform.localScale;
             temp.x = x;
             if (temp.x > 0)
@@ -78,5 +102,27 @@ public class PlayerController : MonoBehaviour
             anim.SetFloat("Run", 0.0f);
             anim.SetBool("Idle", true);
         }
+        float posX = Mathf.Clamp(transform.position.x, -limitPosX, limitPosX);
+        float posY = Mathf.Clamp(transform.position.y, -limitPosY, limitPosY);
+        transform.position = new Vector2(posX, posY);
+    }
+
+    private IEnumerator GenerateBallon()
+    {
+        if (ballons[1] != null)
+        {
+            yield break;
+        }
+        isGenerating = true;
+        if (ballons[0] == null)
+        {
+            ballons[0] = Instantiate(ballonPrefab, ballonTrans[0]);
+        }
+        else
+        {
+            ballons[1] = Instantiate(ballonPrefab, ballonTrans[1]);
+        }
+        yield return new WaitForSeconds(generateTime);
+        isGenerating = false;
     }
 }
