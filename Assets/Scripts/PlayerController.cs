@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     private Animator anim;
     private float limitPosX = 8.5f;
     private float limitPosY = 4.45f;
+    public bool isFirstGenerateBallon;
     public float moveSpeed;
     public float jumpPower;
     public GameObject[] ballons;
@@ -20,14 +21,17 @@ public class PlayerController : MonoBehaviour
     public GameObject ballonPrefab;
     public float generateTime;
     public bool isGenerating;
+    public float knockbackPower;
     [SerializeField]
     private LayerMask groundLayer;
-
+    [SerializeField]
+    private StartChecker startChecker;
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        scale = transform.localScale.x;
         ballons = new GameObject[maxBallonCount];
     }
 
@@ -35,6 +39,11 @@ public class PlayerController : MonoBehaviour
     {
         isGrounded = Physics2D.Linecast(transform.position + transform.up * 0.4f, transform.position - transform.up * 0.9f, groundLayer);
         Debug.DrawLine(transform.position + transform.up * 0.4f, transform.position - transform.up * 0.9f, Color.red, 1.0f);
+        if (isGrounded == true)
+        {
+            anim.ResetTrigger("Fall");
+        }
+        
         if (ballons[0] != null)
         {
             if (Input.GetButtonDown(jump))
@@ -114,15 +123,43 @@ public class PlayerController : MonoBehaviour
             yield break;
         }
         isGenerating = true;
+
+        if (isFirstGenerateBallon == false)
+        {
+            isFirstGenerateBallon = true;
+            Debug.Log("èââÒÇÃÉoÉãÅ[Éìê∂ê¨");
+            startChecker.SetlnitialSpeed();
+        }
         if (ballons[0] == null)
         {
             ballons[0] = Instantiate(ballonPrefab, ballonTrans[0]);
+            ballons[0].GetComponent<Ballon>().SetUpBallon(this);
         }
         else
         {
             ballons[1] = Instantiate(ballonPrefab, ballonTrans[1]);
+            ballons[1].GetComponent<Ballon>().SetUpBallon(this);
         }
         yield return new WaitForSeconds(generateTime);
         isGenerating = false;
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Enemy")
+        {
+            Vector3 direction = (transform.position - collision.transform.position).normalized;
+            transform.position += direction * knockbackPower;
+        }
+    }
+    public void DestroyBallon()
+    {
+        if (ballons[1] != null)
+        {
+            Destroy(ballons[1]);
+        }
+        else if (ballons[0] != null)
+        {
+            Destroy(ballons[0]);
+        }
     }
 }
