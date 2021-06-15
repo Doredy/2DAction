@@ -10,7 +10,8 @@ public class PlayerController : MonoBehaviour
     private float scale;
     private Animator anim;
     private float limitPosX = 8.5f;
-    private float limitPosY = 4.45f;
+    private float limitPosY = 4.5f;
+    private bool isGameOver = false;
     public bool isFirstGenerateBallon;
     public float moveSpeed;
     public float jumpPower;
@@ -22,6 +23,8 @@ public class PlayerController : MonoBehaviour
     public float generateTime;
     public bool isGenerating;
     public float knockbackPower;
+    public int coinPoint;
+    public UIManager uiManager;
     [SerializeField]
     private LayerMask groundLayer;
     [SerializeField]
@@ -81,6 +84,10 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (isGameOver == true)
+        {
+            return;
+        }
         Move();
     }
 
@@ -161,5 +168,21 @@ public class PlayerController : MonoBehaviour
         {
             Destroy(ballons[0]);
         }
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Coin")
+        {
+            coinPoint += collision.gameObject.GetComponent<Coin>().point;
+            uiManager.UpdateDisplayScore(coinPoint);
+            Destroy(collision.gameObject);
+        }
+    }
+
+    public void GameOver()
+    {
+        isGameOver = true;
+        Debug.Log(isGameOver);
+        uiManager.DisplayGameOverInfo();
     }
 }

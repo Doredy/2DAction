@@ -8,7 +8,7 @@ public class VerticalFloatingObject : MonoBehaviour
     public float moveTime;
     public float moveRange;
     Tweener tweener; 
-    // Start is called before the first frame update
+    
     void Start()
     {
         tweener = transform.DOMoveY(transform.position.y - moveRange, moveTime).SetLoops(-1, LoopType.Yoyo);
