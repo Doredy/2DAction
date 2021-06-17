@@ -277,7 +277,7 @@ MonoBehaviour:
   txtScore: {fileID: 603539903}
   txtInfo: {fileID: 1630145537}
   canvasGroupInfo: {fileID: 391848679}
-  resultPopUpPrefab: {fileID: 0}
+  resultPopUpPrefab: {fileID: 774335310830083797, guid: d92bb1e9b17916f43b1f73a99bce0208, type: 3}
   canvasTran: {fileID: 1894748924}
   btnInfo: {fileID: 391848682}
   btnTitle: {fileID: 394185748}
@@ -1418,6 +1418,7 @@ GameObject:
   - component: {fileID: 991547188}
   - component: {fileID: 991547190}
   - component: {fileID: 991547189}
+  - component: {fileID: 991547191}
   m_Layer: 5
   m_Name: lblStart
   m_TagString: Untagged
@@ -1486,6 +1487,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 991547187}
   m_CullTransparentMesh: 1
+--- !u!225 &991547191
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 991547187}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1156800982
 GameObject:
   m_ObjectHideFlags: 0

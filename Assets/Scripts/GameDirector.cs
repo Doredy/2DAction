@@ -94,11 +94,11 @@ public class GameDirector : MonoBehaviour
     {
         for (int i = 0; i < randomObjectGenerators.Length; i++)
         {
-            randomObjectGenerators[i].SwitchActivation(false);
+            randomObjectGenerators[i].SwitchActivation(true);
         }
         for (int i = 0; i < floorGenerators.Length; i++)
         {
-            floorGenerators[i].SwitchActivation(false);
+            floorGenerators[i].SwitchActivation(true);
         }
     }
 }
