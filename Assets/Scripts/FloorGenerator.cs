@@ -11,10 +11,16 @@ public class FloorGenerator : MonoBehaviour
     [Header("¶¬‚Ü‚Å‚Ì‘Ò‹@ŽžŠÔ")]
     public float waitTime;
     private float timer;
+    private GameDirector gameDirector;
+    private bool isActivate;
 
     // Update is called once per frame
     void Update()
     {
+        if (isActivate == false)
+        {
+            return;
+        }
         timer += Time.deltaTime;
         if (timer >= waitTime)
         {
@@ -27,5 +33,15 @@ public class FloorGenerator : MonoBehaviour
         GameObject obj = Instantiate(aerialFloorPrefab, generateTran);
         float randomPosY = Random.Range(-4.0f, 4.0f);
         obj.transform.position = new Vector2(obj.transform.position.x, obj.transform.position.y + randomPosY);
+        gameDirector.GenerateCount++;
+    }
+
+    public void SetUpGenerator(GameDirector gameDirector)
+    {
+        this.gameDirector = gameDirector;
+    }
+    public void SwitchActivation(bool isSwitch)
+    {
+        isActivate = isSwitch;
     }
 }

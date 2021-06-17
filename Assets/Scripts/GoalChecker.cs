@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class GoalChecker : MonoBehaviour
 {
@@ -23,6 +24,8 @@ public class GoalChecker : MonoBehaviour
         {
             isGoal = true;
             Debug.Log("ÉQÅ[ÉÄÉNÉäÉA");
+            PlayerController playerController = collision.gameObject.GetComponent<PlayerController>();
+            playerController.uiManager.GenerateResultPopUp(playerController.coinPoint);
         }
     }
 }
