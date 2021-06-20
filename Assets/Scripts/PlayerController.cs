@@ -172,6 +172,7 @@ public class PlayerController : MonoBehaviour
             ballons[1] = Instantiate(ballonPrefab, ballonTrans[1]);
             ballons[1].GetComponent<Ballon>().SetUpBallon(this);
         }
+        ballonCount++;
         yield return new WaitForSeconds(generateTime);
         isGenerating = false;
     }
@@ -196,6 +197,7 @@ public class PlayerController : MonoBehaviour
         {
             Destroy(ballons[0]);
         }
+        ballonCount--;
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {

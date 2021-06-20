@@ -1304,7 +1304,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aerialFloorPrefab: {fileID: 1632824590503234568, guid: bc7ec60184b61ed4682e639d9ab9fe99, type: 3}
   generateTran: {fileID: 2007700810}
-  waitTime: 5
+  waitTime: 10
 --- !u!4 &640286580
 Transform:
   m_ObjectHideFlags: 0
@@ -1335,7 +1335,7 @@ MonoBehaviour:
   - {fileID: 7778030608122926355, guid: 5f940fdc578489343827a6c347b4e3ac, type: 3}
   - {fileID: 2753531329368696446, guid: a2a3fcde926ae044198fb4f354b0bad8, type: 3}
   generateTran: {fileID: 2007700810}
-  waitTimeRange: {x: 2, y: 5}
+  waitTimeRange: {x: 4, y: 7}
 --- !u!114 &640286582
 MonoBehaviour:
   m_ObjectHideFlags: 0
