@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -29,6 +30,23 @@ public class PlayerController : MonoBehaviour
     private LayerMask groundLayer;
     [SerializeField]
     private StartChecker startChecker;
+    [SerializeField]
+    private AudioClip knockbackSE;
+    [SerializeField]
+    private GameObject knockbackEffectPrefab;
+    [SerializeField]
+    private AudioClip coinSE;
+    [SerializeField]
+    private GameObject coinEffectPrefab;
+    [SerializeField]
+    private Joystick joystick;
+    [SerializeField]
+    private Button btnJump;
+    [SerializeField]
+    private Button btnDetach;
+    private int ballonCount;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,6 +54,8 @@ public class PlayerController : MonoBehaviour
         anim = GetComponent<Animator>();
         scale = transform.localScale.x;
         ballons = new GameObject[maxBallonCount];
+        btnJump.onClick.AddListener(OnClickJump);
+        btnDetach.onClick.AddListener(OnClickDetachOrGenerate);
     }
 
     private void Update()
@@ -93,7 +113,12 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
+#if UNITY_EDITOR
         float x = Input.GetAxis(horizontal);
+        x = joystick.Horizontal;
+#else
+        float x = joystick.Horizontal;
+#endif
 
         if (x != 0)
         {
@@ -156,6 +181,9 @@ public class PlayerController : MonoBehaviour
         {
             Vector3 direction = (transform.position - collision.transform.position).normalized;
             transform.position += direction * knockbackPower;
+            AudioSource.PlayClipAtPoint(knockbackSE, transform.position);
+            GameObject knockbackEffect = Instantiate(knockbackEffectPrefab, collision.transform.position, Quaternion.identity);
+            Destroy(knockbackEffect, 0.5f);
         }
     }
     public void DestroyBallon()
@@ -176,6 +204,9 @@ public class PlayerController : MonoBehaviour
             coinPoint += collision.gameObject.GetComponent<Coin>().point;
             uiManager.UpdateDisplayScore(coinPoint);
             Destroy(collision.gameObject);
+            AudioSource.PlayClipAtPoint(coinSE, transform.position);
+            GameObject coinEffect = Instantiate(coinEffectPrefab, collision.transform.position, Quaternion.identity);
+            Destroy(coinEffect, 0.5f);
         }
     }
 
@@ -184,5 +215,21 @@ public class PlayerController : MonoBehaviour
         isGameOver = true;
         Debug.Log(isGameOver);
         uiManager.DisplayGameOverInfo();
+    }
+
+    private void OnClickJump()
+    {
+        if (ballonCount > 0)
+        {
+            Jump();
+        }
+    }
+
+    private void OnClickDetachOrGenerate()
+    {
+        if (isGrounded == true && ballonCount < maxBallonCount && isGenerating == false)
+        {
+            StartCoroutine(GenerateBallon());
+        }
     }
 }

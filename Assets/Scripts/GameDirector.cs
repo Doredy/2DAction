@@ -12,6 +12,8 @@ public class GameDirector : MonoBehaviour
     private FloorGenerator[] floorGenerators;
     [SerializeField]
     private RandomObjectGenerator[] randomObjectGenerators;
+    [SerializeField]
+    private AudioManager audioManager;
     private bool isSetUp;
     private bool isGameUp;
     private int generateCount;
@@ -40,6 +42,7 @@ public class GameDirector : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        StartCoroutine(audioManager.PlayBGM(0));
         isGameUp = false;
         isSetUp = false;
         SetUpFloorGenerators();
@@ -63,6 +66,7 @@ public class GameDirector : MonoBehaviour
             isSetUp = true;
             Debug.Log("生成スタート");
             ActivateGenerators();
+            StartCoroutine(audioManager.PlayBGM(1));
         }
     }
 
@@ -70,6 +74,7 @@ public class GameDirector : MonoBehaviour
     {
         GoalChecker goalHouse = Instantiate(goalHousePrefab);
         Debug.Log("ゴール地点生成");
+        goalHouse.SetUpGoalHouse(this);
     }
 
     public void GameUp()
@@ -100,5 +105,10 @@ public class GameDirector : MonoBehaviour
         {
             floorGenerators[i].SwitchActivation(true);
         }
+    }
+    
+    public void GoalClear()
+    {
+        StartCoroutine(audioManager.PlayBGM(2));
     }
 }
